@@ -19,9 +19,9 @@ def compare_results(probs_mut, probs_cross):
 
             x = df.index
 
-            ax1.legend(loc="lower right",ncol=1)
             ax1.plot(x, df['best'], label=f"{prob_mut}mut-{prob_cross}cross")
             ax2.plot(x, df['average'])
+            ax1.legend(loc="lower right",ncol=1, prop={'size': 6})
 
     ax1.set_title('Best')
     ax2.set_title('Average')
@@ -33,9 +33,9 @@ def compare_results(probs_mut, probs_cross):
     plt.show()
 
 if __name__ == '__main__':
-    numb_generations = 200
-    size_pop = 50
-    size_cromo = 64
+    numb_generations = 100
+    size_pop = 100
+    size_cromo = 32
     probs_mut = [0.001, 0.01, 0.05]
     probs_cross = [0.7, 0.8]
     sel_parents = tour_sel(3)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     num_runs = 5
 
     # change to run tests
-    if True:
+    if False:
         for prob_mut in probs_mut:
             for prob_cross in probs_cross:
                 filename = f"results\parameterization\{prob_mut}mut-{prob_cross}cross.csv"
