@@ -1,9 +1,6 @@
-from pickle import FALSE
 from crossover_2019 import pmx_cross, order_cross
-# from recombination_operators import cxPartialyMatched
 from utils import run_multiple, swap_mutation, tour_sel, sel_survivors_elite
 from nqueens import fitness, initialize_population
-from recombination_operators import cxPartialyMatched
 import matplotlib.pyplot as plt
 import pandas as pd
 plt.rcParams["figure.figsize"] = (10,4)
@@ -14,7 +11,7 @@ def compare_results(cross_operators):
     for operator in cross_operators:
         # read from file and plot data
         try:
-            df = pd.read_csv(f"results\{operator}.csv")
+            df = pd.read_csv(f"results\{operator}")
         except FileNotFoundError:
             print(f"File for {operator} not found.")
             continue
@@ -34,8 +31,13 @@ def compare_results(cross_operators):
 
     plt.show()
 
+def run_test(operator, operator_name, filename):
+    filename = f"results\\" + filename
+    print(f"Running test for {operator_name}")
+    run_multiple(filename,num_runs,num_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,operator,mutation,sel_survivors, fitness_func, initialize_population)
+
 cross_operators = [pmx_cross, order_cross]
-num_generations = 300
+num_generations = 10
 size_pop = 150
 size_cromo = 64
 prob_mut = 0.05
@@ -45,18 +47,14 @@ mutation = swap_mutation
 sel_survivors = sel_survivors_elite(0.02)
 fitness_func = fitness 
 
-num_runs = 30
+num_runs = 1
 
 # change to run tests
 if False:
-    filename = f"results\pmx_cross.csv"
-    print(f"Running test for PMX")
-    run_multiple(filename,num_runs,num_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,pmx_cross,mutation,sel_survivors, fitness_func, initialize_population)
-    
-    filename = f"results\order_cross.csv"
-    print(f"Running test for Order crossover")
-    run_multiple(filename,num_runs,num_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,order_cross,mutation,sel_survivors, fitness_func, initialize_population)
+    run_test(pmx_cross, "PMX", "pmx_cross.csv")
+ 
+    run_test(order_cross, "Order crossover", "order_cross.csv")
 
     print("All done!")
 
-compare_results(["pmx_cross", "order_cross"])
+compare_results(["pmx_cross.csv", "order_cross.csv"])
