@@ -1,3 +1,4 @@
+from pickle import FALSE
 from crossover_2019 import pmx_cross, order_cross
 # from recombination_operators import cxPartialyMatched
 from utils import run_multiple, swap_mutation, tour_sel, sel_survivors_elite
@@ -22,7 +23,7 @@ def compare_results(cross_operators):
 
         ax1.plot(x, df['best'], label=f"{operator}")
         ax2.plot(x, df['average'])
-        ax1.legend(loc="lower right",ncol=1, prop={'size': 6})
+        ax1.legend(loc="lower right",ncol=1, prop={'size': 10})
 
     ax1.set_title('Best')
     ax2.set_title('Average')
@@ -47,7 +48,7 @@ fitness_func = fitness
 num_runs = 30
 
 # change to run tests
-if True:
+if False:
     filename = f"results\pmx_cross.csv"
     print(f"Running test for PMX")
     run_multiple(filename,num_runs,num_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,pmx_cross,mutation,sel_survivors, fitness_func, initialize_population)
@@ -58,4 +59,4 @@ if True:
 
     print("All done!")
 
-compare_results(["pmx_cross, order_cross"])
+compare_results(["pmx_cross", "order_cross"])

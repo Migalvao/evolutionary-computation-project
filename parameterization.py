@@ -21,7 +21,7 @@ def compare_results(probs_mut, probs_cross):
 
             ax1.plot(x, df['best'], label=f"{prob_mut}mut-{prob_cross}cross")
             ax2.plot(x, df['average'])
-            ax1.legend(loc="lower right",ncol=1, prop={'size': 6})
+            ax1.legend(loc="lower right",ncol=1, prop={'size': 10})
 
     ax1.set_title('Best')
     ax2.set_title('Average')
