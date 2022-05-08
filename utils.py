@@ -2,15 +2,7 @@ import pandas as pd
 import numpy as np
 from random import randint, random, sample
 from operator import itemgetter
-
-# Initialize population
-def gera_pop(size_pop,size_cromo):
-    return [(gera_indiv(size_cromo),0) for i in range(size_pop)]
-
-def gera_indiv(size_cromo):
-    # random initialization
-    indiv = [randint(0,1) for i in range(size_cromo)]
-    return indiv
+# DISCLAIMER: This code was obtained (and adapted) from Evolutionary Computation's practical classes material
 
 # Fitness evaluation
 def best_pop(populacao):
@@ -20,20 +12,20 @@ def best_pop(populacao):
 def avg_fitness(pop, fitness_function):
     return sum([fitness_function(indiv[0]) for indiv in pop]) / len(pop)
 
-# Variation operators: Binary mutation	    
-def muta_bin(indiv,prob_muta):
-    # Mutation by gene
-    cromo = indiv[:]
-    for i in range(len(indiv)):
-        cromo[i] = muta_bin_gene(cromo[i],prob_muta)
-    return cromo
-
-def muta_bin_gene(gene, prob_muta):
-    g = gene
-    value = random()
-    if value < prob_muta:
-        g ^= 1
-    return g
+# Variation operators: ------ > swap mutation
+def swap_mutation(cromo, prob_muta):
+    if  random() < prob_muta:
+        comp = len(cromo) - 1
+        copia = cromo[:]
+        i = randint(0, comp)
+        j = randint(0, comp)
+        while i == j:
+            i = randint(0, comp)
+            j = randint(0, comp)
+        copia[i], copia[j] = copia[j], copia[i]
+        return copia
+    else:
+        return cromo
 
 # Parents Selection: tournament
 def tour_sel(t_size):
@@ -63,17 +55,18 @@ def sel_survivors_elite(elite):
         return new_population
     return elitism
 
-# Simple [Binary] Evolutionary Algorithm		
-def sea(numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func):
-    # inicialize population: indiv = (cromo,fit)
+# Simple [permutation] Evolutionary Algorithm		
+def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop):
+
     populacao = gera_pop(size_pop,size_cromo)
     # evaluate population
     populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]
-
-    all_best = [best_pop(populacao)[1]]
-    all_fitness = [avg_fitness(populacao, fitness_func)]
-
-    for i in range(numb_generations):
+    best = best_pop(populacao)
+    
+    all_best = []
+    all_fitness = []
+    
+    for gen in range(numb_generations):
         # sparents selection
         mate_pool = sel_parents(populacao)
         # Variation
@@ -92,19 +85,23 @@ def sea(numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,r
         # New population
         populacao = sel_survivors(populacao,descendentes)
         # Evaluate the new population
-        populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]    
+        populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]     
         
-        all_best.append(best_pop(populacao)[1])
+        candi = best_pop(populacao)
+        if(candi[1]<best[1]):
+            best = candi
+            
+        all_best.append(candi[1])
         all_fitness.append(avg_fitness(populacao, fitness_func))
+            
+    return best, all_best, all_fitness
 
-    return best_pop(populacao), all_best, all_fitness
-
-def run_multiple(filename,numb_runs,numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func):
+def run_multiple(filename,numb_runs,numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop):
     bests = []
     avgs = []
 
     for i in range(numb_runs):
-        best, all_best, all_avg_fitness = sea(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func)
+        best, all_best, all_avg_fitness = sea_perm(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop)
         bests.append(all_best)
         avgs.append(all_avg_fitness)
 
