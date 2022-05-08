@@ -3,25 +3,6 @@ import random
 # DISCLAIMER: This code was obtained from Evolutionary Computation's practical classes material
 
 # Recombination Operators
-
-# Generic	
-def uniform_cross(cromo_1, cromo_2,prob_cross):
-	value = random.random()
-	if value < prob_cross:
-		f1=[]
-		f2=[]
-		for i in range(0,len(cromo_1)):
-			if random.random() < 0.5:
-				f1.append(cromo_1[i])
-				f2.append(cromo_2[i])
-			else:
-				f1.append(cromo_2[i])
-				f2.append(cromo_1[i])
-
-		return [f1,f2]
-	else:
-		return [cromo_1,cromo_2]
-
 # Permutations
 # OX - order crossover
 

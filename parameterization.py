@@ -1,4 +1,4 @@
-from crossover_2019 import uniform_cross
+from crossover_2019 import pmx_cross
 from utils import run_multiple, swap_mutation, tour_sel, sel_survivors_elite
 from nqueens import fitness, initialize_population
 import matplotlib.pyplot as plt
@@ -33,13 +33,13 @@ def compare_results(probs_mut, probs_cross):
     plt.show()
 
 if __name__ == '__main__':
-    numb_generations = 100
-    size_pop = 100
+    numb_generations = 200
+    size_pop = 75
     size_cromo = 32
     probs_mut = [0.001, 0.01, 0.05]
     probs_cross = [0.7, 0.8]
     sel_parents = tour_sel(3)
-    recombination = uniform_cross
+    recombination = pmx_cross
     mutation = swap_mutation
     sel_survivors = sel_survivors_elite(0.02)
     fitness_func = fitness   
@@ -51,7 +51,7 @@ if __name__ == '__main__':
         for prob_mut in probs_mut:
             for prob_cross in probs_cross:
                 filename = f"results\parameterization\{prob_mut}mut-{prob_cross}cross.csv"
-                print(f"Running test for {prob_mut} mutation prob and {prob_cross} crossover prob")
+                print(f"Running {num_runs} tests for {prob_mut} mutation prob and {prob_cross} crossover prob")
                 run_multiple(filename,num_runs,numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, initialize_population)
     
         print("All done!")

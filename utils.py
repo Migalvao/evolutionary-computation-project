@@ -75,11 +75,11 @@ def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_pa
         for i in  range(0,size_pop-1,2):
             indiv_1= mate_pool[i]
             indiv_2 = mate_pool[i+1]
-            filhos = recombination(indiv_1,indiv_2, prob_cross)
+            filhos = recombination(indiv_1[0],indiv_2[0], prob_cross)
             progenitores.extend(filhos) 
         # ------ Mutation
         descendentes = []
-        for cromo,fit in progenitores:
+        for cromo in progenitores:
             novo_indiv = mutation(cromo,prob_mut)
             descendentes.append((novo_indiv,fitness_func(novo_indiv)))
         # New population
@@ -104,6 +104,7 @@ def run_multiple(filename,numb_runs,numb_generations,size_pop, size_cromo, prob_
         best, all_best, all_avg_fitness = sea_perm(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop)
         bests.append(all_best)
         avgs.append(all_avg_fitness)
+        print(f"Test {i+1} done...")
 
 
     bests = np.array(bests)
