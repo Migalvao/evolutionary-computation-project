@@ -62,6 +62,7 @@ def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_pa
     # evaluate population
     populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]
     best = best_pop(populacao)
+    best_gen = -1
     
     all_best = []
     all_fitness = []
@@ -88,31 +89,43 @@ def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_pa
         populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]     
         
         candi = best_pop(populacao)
-        if(candi[1]<best[1]):
+        if(candi[1]>best[1]):
             best = candi
+            best_gen = gen + 1 
             
         all_best.append(candi[1])
         all_fitness.append(avg_fitness(populacao, fitness_func))
             
-    return best, all_best, all_fitness
+    return best, all_best, all_fitness, best_gen
 
-def run_multiple(filename,numb_runs,numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop):
+def run_multiple(filename,numb_runs,numb_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop, calculate_average=False):
     bests = []
     avgs = []
+    overall_bests = []
+    overall_bests_generations = [] 
 
     for i in range(numb_runs):
-        best, all_best, all_avg_fitness = sea_perm(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop)
-        bests.append(all_best)
-        avgs.append(all_avg_fitness)
+        best, all_best, all_avg_fitness, best_gen = sea_perm(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop)
+        if calculate_average:
+            bests.append(all_best)
+            avgs.append(all_avg_fitness)
+        
+        overall_bests.append(best[1])
+        overall_bests_generations.append(best_gen)
+
         print(f"Test {i+1} done...")
 
+    if calculate_average:
+        bests = np.array(bests)
+        avgs = np.array(avgs)
 
-    bests = np.array(bests)
-    avgs = np.array(avgs)
+        bests_avg = [sum(bests[:,i])/ len(bests[:,i]) for i in range(numb_generations)]
+        avgs_avg = [sum(avgs[:,i])/ len(avgs[:,i]) for i in range(numb_generations)]
 
-    bests_avg = [sum(bests[:,i])/ len(bests[:,i]) for i in range(numb_generations)]
-    avgs_avg = [sum(avgs[:,i])/ len(avgs[:,i]) for i in range(numb_generations)]
+        df = pd.DataFrame(np.transpose([bests_avg, avgs_avg]), columns=["best", "average"])
+        
+        df.to_csv(filename + "_averages.csv", index=False)
 
-    df = pd.DataFrame(np.transpose([bests_avg, avgs_avg]), columns=["best", "average"])
-    
-    df.to_csv(filename, index=False)
+    df = pd.DataFrame(np.transpose([overall_bests, overall_bests_generations]), columns=["fitness", "generation"])
+
+    df.to_csv(filename + ".csv", index=False)
