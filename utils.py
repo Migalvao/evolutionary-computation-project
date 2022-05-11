@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from random import randint, random, sample
+from random import randint, random, sample, seed
 from operator import itemgetter
 # DISCLAIMER: This code was obtained (and adapted) from Evolutionary Computation's practical classes material
 
@@ -56,7 +56,7 @@ def sel_survivors_elite(elite):
     return elitism
 
 # Simple [permutation] Evolutionary Algorithm		
-def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop):
+def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop, return_all=False):
 
     populacao = gera_pop(size_pop,size_cromo)
     # evaluate population
@@ -93,8 +93,9 @@ def sea_perm(numb_generations,size_pop, size_cromo, prob_mut,  prob_cross,sel_pa
             best = candi
             best_gen = gen + 1 
             
-        all_best.append(candi[1])
-        all_fitness.append(avg_fitness(populacao, fitness_func))
+        if return_all:
+            all_best.append(candi[1])
+            all_fitness.append(avg_fitness(populacao, fitness_func))
             
     return best, all_best, all_fitness, best_gen
 
@@ -105,7 +106,8 @@ def run_multiple(filename,numb_runs,numb_generations,size_pop, size_cromo, prob_
     overall_bests_generations = [] 
 
     for i in range(numb_runs):
-        best, all_best, all_avg_fitness, best_gen = sea_perm(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop)
+        seed(i) # set random seed for the test
+        best, all_best, all_avg_fitness, best_gen = sea_perm(numb_generations,size_pop, size_cromo,prob_mut, prob_cross,sel_parents,recombination,mutation,sel_survivors, fitness_func, gera_pop, return_all=calculate_average)
         if calculate_average:
             bests.append(all_best)
             avgs.append(all_avg_fitness)

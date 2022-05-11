@@ -6,7 +6,7 @@ ernesto@dei.uc.pt
 """
 __author__ = 'Ernesto Costa'
 __date__ = 'March 2022'
-# DISCLAIMER: This code was obtained (and adapted) from Evolutionary Computation's practical classes material
+# DISCLAIMER: This code was obtained from Evolutionary Computation's practical classes material
 
 import pandas as pd
 import numpy as np

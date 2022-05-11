@@ -1,8 +1,8 @@
+import matplotlib.pyplot as plt
+import pandas as pd
 from crossover_2019 import pmx_cross, order_cross
 from utils import run_multiple, swap_mutation, tour_sel, sel_survivors_elite
 from nqueens import fitness, initialize_population
-import matplotlib.pyplot as plt
-import pandas as pd
 plt.rcParams["figure.figsize"] = (10,4)
 
 def compare_averages(cross_operators):
@@ -31,30 +31,28 @@ def compare_averages(cross_operators):
 
     plt.show()
 
-def run_test(operator, operator_name, filename, calculate_average=False):
+def run_test(n_runs, operator, operator_name, filename, calculate_average=False):
     filename = f"results\\" + filename
     print(f"Running test for {operator_name}")
-    run_multiple(filename,num_runs,num_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,operator,mutation,sel_survivors, fitness_func, initialize_population, calculate_average=calculate_average)
+    run_multiple(filename,n_runs,num_generations,size_pop, size_cromo, prob_mut,prob_cross,sel_parents,operator,mutation,sel_survivors, fitness_func, initialize_population, calculate_average=calculate_average)
 
-cross_operators = [pmx_cross, order_cross]
-num_generations = 300
-size_pop = 150
-size_cromo = 64
-prob_mut = 0.05
-prob_cross = 0.8
-sel_parents = tour_sel(3)
-mutation = swap_mutation
-sel_survivors = sel_survivors_elite(0.02)
-fitness_func = fitness 
+if __name__ == '__main__':
+    cross_operators = [pmx_cross, order_cross]
+    num_generations = 300
+    size_pop = 150
+    size_cromo = 64
+    prob_mut = 0.05
+    prob_cross = 0.8
+    sel_parents = tour_sel(3)
+    mutation = swap_mutation
+    sel_survivors = sel_survivors_elite(0.02)
+    fitness_func = fitness 
 
-num_runs = 30
+    num_runs = 30
 
-# change to run tests
-if True:
-    run_test(pmx_cross, "PMX", "pmx_cross", calculate_average=False)
- 
-    run_test(order_cross, "Order crossover", "order_cross", calculate_average=False)
+    # Choose tests
+    run_test(num_runs, pmx_cross, "PMX", "pmx_cross", calculate_average=False)
+
+    run_test(num_runs, order_cross, "Order crossover", "order_cross", calculate_average=False)
 
     print("All done!")
-
-compare_averages(["pmx_cross", "order_cross"])
