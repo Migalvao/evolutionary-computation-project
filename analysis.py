@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from statistics import wilcoxon, test_normal_sw, histogram_with_normal
+from pingouin import wilcoxon as wilcoxon
+from statistics import test_normal_sw, box_plot
 plt.rcParams["figure.figsize"] = (10,4)
 
 def plot_shapiro_wilk(data, confidence_level, labels):
@@ -27,7 +28,7 @@ def plot_shapiro_wilk(data, confidence_level, labels):
 
     plt.show()
 
-def statisical_analysis(filename1, filename2, name1, name2, plot_sw_test=False):
+def statisical_analysis(filename1, filename2, name1, name2, show_boxplot=False, plot_sw_test=False):
     df1 = pd.read_csv("results\\" + filename1)
     df2 = pd.read_csv("results\\" + filename2)
     
@@ -42,17 +43,27 @@ def statisical_analysis(filename1, filename2, name1, name2, plot_sw_test=False):
 
         plot_shapiro_wilk(data, 0.05, labels)
 
+    # FITNESS
+    res = wilcoxon(fitness1, fitness2, correction=False).iloc[0]
     print("Wilcoxon test for fitness: ")
-    res = wilcoxon(fitness1, fitness2)
-    print(f"Statistical value: {res.statistic}, P-value: {res.pvalue}")
-    print("Mean of best fitness for " + name1 + ":", np.mean(fitness1))
-    print("Mean of best fitness for " + name2 + ":", np.mean(fitness2))
+    print(f"Statistical value: {res['W-val']}, P-value: {res['p-val']}, Effect Size: {res['RBC']}")
+    print("Mean of best fitness for " + name1 + ":", np.mean(fitness1), "Median: ", np.median(fitness1))
+    print("Mean of best fitness for " + name2 + ":", np.mean(fitness2), "Median: ", np.median(fitness2))
+    
+    if show_boxplot:
+        box_plot([fitness1, fitness2], ["Fitness " + name1, "Fitness " + name2])
 
+    # GENERATIONS
+    res = wilcoxon(generations1, generations2, correction=False).iloc[0]
     print("\nWilcoxon test for generation: ")
-    res = wilcoxon(generations1, generations2)
-    print(f"Statistical value: {res.statistic}, P-value: {res.pvalue}")
-    print("Mean of generation for " + name1 + ":", np.mean(generations1))
-    print("Mean of generation for " + name2 + ":", np.mean(generations2))
+    print(f"Statistical value: {res['W-val']}, P-value: {res['p-val']}, Effect Size: {res['RBC']}")
+    print("Mean of generation for " + name1 + ":", np.mean(generations1), "Median: ", np.median(generations1))
+    print("Mean of generation for " + name2 + ":", np.mean(generations2), "Median: ", np.median(generations2))
+    
+    if show_boxplot:
+        box_plot([generations1, generations2], ["Generations " + name1, "Generations " + name2])
 
 if __name__ == '__main__':
-    statisical_analysis("pmx_cross.csv", "order_cross.csv", "PMX", "Order X", plot_sw_test=False)
+    show_boxplots = False
+    show_shapiro_wilk = False
+    statisical_analysis("pmx_cross.csv", "order_cross.csv", "PMX", "Order X", show_boxplot=show_boxplots, plot_sw_test=show_shapiro_wilk)

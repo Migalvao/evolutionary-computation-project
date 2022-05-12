@@ -10,6 +10,8 @@ __date__ = 'March 2022'
 
 import numpy as np
 import scipy.stats as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Parametric assessement
 def test_normal_sw(data):
@@ -25,3 +27,10 @@ def wilcoxon(data1,data2):
     dependent
     """     
     return st.wilcoxon(data1,data2)
+
+def box_plot(data, labels):
+    """ Returns medians """
+    sns.set()
+    plt.rcParams["figure.figsize"] = (4,4)
+    res = plt.boxplot(data,labels=labels)
+    plt.show()

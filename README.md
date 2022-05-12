@@ -30,7 +30,7 @@ python run_tests.py
 
 ### Analyse results
 
-This file applies, for a pair of crossover algorithms, the Wilcoxon signed rank test to assess the statistical similarity of the resulting distributions. In order to also apply and plot the Shapiro-Wilk test for each of the distributions, change the "plot_sw_test" parameter in the main function to "True".
+This file applies, for a pair of crossover algorithms, the Wilcoxon signed rank test to assess the statistical similarity of the resulting distributions. In order to also apply and plot the Shapiro-Wilk test for each of the distributions, change the "show_shapiro_wilk" variable in the main function to "True". Similarly, to present a boxplot of the distributions, change the "show_boxplots" variable value to "True" in the main block of code.
 To run these tests simply run, in the directory of the project,
 
 ```sh
