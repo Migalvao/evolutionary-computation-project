@@ -1,6 +1,7 @@
 # Evolutionary Computation Project
 
-The goal of this project is to test and compare two different permutation operators for Evolutionary Computation algorithms.
+The goal of this project is to test and compare two different permutation operators for Evolutionary Computation algorithms, Partially Mapped Crossover and Order Crossover.
+Miguel Galvão, 2022
 
 ### Parameterization
 
@@ -16,14 +17,22 @@ To run, simply run, in the directory of the project,
 python parameterization.py
 ```
 
-### Compare operators
+### Run tests
 
-To configure the testing environment, similar to the parameterization part, you should open the `main.py` file and change the necessary variables to run the different tests.
-Just like in the previous section, change the value of the if clause according to wether or not you wish to run the tests or simply compare the results.
+To configure the testing environment, similar to the parameterization part, you should open the `run_tests.py` file and change the necessary variables to run the different tests.
 To change the crossover operators being used, simply add (or remove) another call of the function "run_test" with the crossover function, it's name and also the name of the file in which the results should be stored.
 
 To run, simply run, in the directory of the project,
 
 ```sh
-python main.py
+python run_tests.py
+```
+
+### Analyse results
+
+This file applies, for a pair of crossover algorithms, the Wilcoxon signed rank test to assess the statistical similarity of the resulting distributions. In order to also apply and plot the Shapiro-Wilk test for each of the distributions, change the "plot_sw_test" parameter in the main function to "True".
+To run these tests simply run, in the directory of the project,
+
+```sh
+python analysis.py
 ```

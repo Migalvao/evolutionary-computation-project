@@ -36,10 +36,10 @@ def statisical_analysis(filename1, filename2, name1, name2, plot_sw_test=False):
     generations1 = df1['generation'].tolist()
     generations2 = df2['generation'].tolist()
 
-    data = [test_normal_sw(fitness1), test_normal_sw(fitness2), test_normal_sw(generations1), test_normal_sw(fitness2)]
-    labels = ["Fitness " + name1, "Fitness " + name2, "Generations " + name1, "Generations " + name2]
-
     if plot_sw_test:
+        data = [test_normal_sw(fitness1), test_normal_sw(fitness2), test_normal_sw(generations1), test_normal_sw(fitness2)]
+        labels = ["Fitness " + name1, "Fitness " + name2, "Generations " + name1, "Generations " + name2]
+
         plot_shapiro_wilk(data, 0.05, labels)
 
     print("Wilcoxon test for fitness: ")
@@ -54,33 +54,5 @@ def statisical_analysis(filename1, filename2, name1, name2, plot_sw_test=False):
     print("Mean of generation for " + name1 + ":", np.mean(generations1))
     print("Mean of generation for " + name2 + ":", np.mean(generations2))
 
-
-def compare_averages(cross_operators):
-    fig, (ax1, ax2) = plt.subplots(1, 2, sharey=False)
-
-    for operator in cross_operators:
-        # read from file and plot data
-        try:
-            df = pd.read_csv(f"results\{operator}_averages.csv")
-        except FileNotFoundError:
-            print(f"File for {operator} not found.")
-            continue
-
-        x = df.index
-
-        ax1.plot(x, df['best'], label=f"{operator}")
-        ax2.plot(x, df['average'])
-        ax1.legend(loc="lower right",ncol=1, prop={'size': 10})
-
-    ax1.set_title('Best')
-    ax2.set_title('Average')
-    ax1.set_xlabel('Fitness')
-    ax2.set_xlabel('Fitness')
-    ax1.set_xlabel('Generation')
-    ax2.set_xlabel('Generation')
-
-    plt.show()
-
 if __name__ == '__main__':
-    # compare_averages(["pmx_cross", "order_cross"])
     statisical_analysis("pmx_cross.csv", "order_cross.csv", "PMX", "Order X", plot_sw_test=False)
